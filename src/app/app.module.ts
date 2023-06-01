@@ -18,6 +18,7 @@ import { SurpriseComponent } from './surprise/surprise.component';
 import { LoginComponent } from './login/login.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CanviarpasswordComponent } from './canviarpassword/canviarpassword.component';
+import {NgHcaptchaModule} from "ng-hcaptcha";
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { CanviarpasswordComponent } from './canviarpassword/canviarpassword.comp
     AppRoutingModule,
     HttpClientModule,
     RecaptchaModule,
-    FormsModule
+    FormsModule,
+    NgHcaptchaModule
   ],
   providers: [],
   bootstrap: [AppComponent]

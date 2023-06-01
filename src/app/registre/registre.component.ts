@@ -20,47 +20,69 @@ declare global {
   styleUrls: ['./registre.component.css']
 })
 export class RegistreComponent  {
+  autenticat= this.userService.autenticat;
+  nomAutenticat: any;
   correu: any;
   passwd: any;
   nom: any;
   cognoms: any;
   adreca: any;
   telefon: any;
-
-  autenticat = this.registraServei.autenticat
-  nomAutenticat = this.registraServei.nomAutenticat
+  correuTrobat: any;
+  captchaVerificat = false;
 
   tancarSessio(){
     window.location.reload();
-    this.registraServei.autenticat = false;
-    this.registraServei.nomAutenticat = 'null';
-    this.autenticat= false;
+    this.userService.autenticat = false;
+    this.autenticat = false;
     this.nomAutenticat= 'null';
   }
 
-  registrar(){
-    let trobat = false;
-    for(let i = 0; i <= this.registraServei.correu_array.length; i++ ){
-      if (this.registraServei.correu_array[i]==this.correu){
-        trobat = true;
-        alert("Ja existeix un usuari amb aquest correu")
-        break;
+  onVerify(token: string) {
+    this.captchaVerificat=true;
+  }
+
+  onExpired(response: any) {
+    alert("La verificació ha caducat!")
+  }
+
+  onError(error: any) {
+    alert("No 'ha pogut verificar correctament el captcha!")
+  }
+
+  async registrar() {
+    for (let i = 0; i < this.userService.arrClients.clients.length; i++) {
+      if (this.userService.arrClients.clients[i].Correu == this.correu) {
+        this.correuTrobat = true;
       }
     }
-    if (!trobat){
-      this.registraServei.correu_array.push(this.correu)
-      this.registraServei.passwd_array.push(this.passwd)
-      this.registraServei.nom_array.push(this.nom)
-      this.registraServei.cognoms_array.push(this.cognoms)
-      this.registraServei.adreca_array.push(this.adreca)
-      this.registraServei.tel_array.push(this.telefon)
-      window.alert(`S'ha enviat un correu de verificacio.`)
-      this.router.navigate(['/login'])
+    if (this.correuTrobat) {
+      alert("Ja existeix un usuari registrat amb aquest correu!")
+    } else {
+      this.http.post<any>('http://localhost:3080/datausers', {
+        Adreça: this.adreca,
+        Cognoms: this.cognoms,
+        Correu: this.correu,
+        Nom: this.nom,
+        Telèfon: this.telefon,
+        //Afegim un camp que es rol que per defecte es client.
+        Rol: 'client'
+      }).subscribe();
+      this.http.post<any>('http://localhost:3080/signup', {
+        email: this.correu,
+        password: this.passwd
+      }).subscribe();
+      this.http.post<any>('http://localhost:3080/log',{
+        log: 'registre',
+        text: `${this.nom} s'ha registrat amb l'adreça de correu ${this.correu}`
+      }).subscribe();
+      window.alert("S'ha enviat un correu de verificació.")
+      await this.router.navigate(['/login']);
     }
-
-
   }
-  constructor(private registraServei: RegistreLoginService,public router:Router) {
+
+  constructor(private registraServei: RegistreLoginService,public router:Router,
+              private userService: UsersService, private http: HttpClient) {
   }
 
   ngOnInit(){}

@@ -6,9 +6,9 @@ import {HttpClient} from "@angular/common/http";
 })
 export class UsersService implements OnInit {
   public autenticat: boolean | undefined;
-  public posAutenticat = 0;
+  public posAutenticat = -1;
   public emailAutenticat: any;
-  public arrClients: any[] = [];
+  public arrClients: any;
   public usuari: any;
   public walletName: any;
 

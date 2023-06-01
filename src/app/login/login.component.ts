@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import {RegistreLoginService} from "../registre-login.service";
 import {Router} from "@angular/router";
+import {UsersService} from "../users.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {HttpClient} from "@angular/common/http";
 
 @Component({
   selector: 'app-login',
@@ -11,39 +14,43 @@ export class LoginComponent {
   [x: string]: any;
   email: any;
   passwd: any;
+  correuTrobat: any;
 
-  autenticar(){
-    let trobat = false;
-    let posicio = 0;
-    for(let i = 0; i <= this.registraServei.correu_array.length; i++){
-      if (this.registraServei.correu_array[i]==this.email){
+  async autenticar() {
+    var errorMessage = ' ';
 
-        trobat = true;
-        posicio = i
-      }
+    await this.firebaseAuth.signInWithEmailAndPassword(this.email, this.passwd).then(res => {
+        this.usersService.autenticat = true;
+        this.usersService.usuari = JSON.stringify(res.user);
+        this.usersService.emailAutenticat = this.email;
+        this.correuTrobat = false;
+
+        for (let i = 0; i < this.usersService.arrClients.clients.length; i++) {
+          if (this.usersService.arrClients.clients[i].Correu == this.email) {
+            this.usersService.posAutenticat = i;
+            this.correuTrobat = true;
+            this.http.post<any>('http://localhost:3080/log',
+              {log: 'login', text: `Ha iniciat sessió un usuari amb l'adreça de correu ${this.email}`}).subscribe();
+
+            this.router.navigate(['/'])
+          }
+        }
+        if (!this.correuTrobat) {
+          alert("Sembla que no disposem de les dades d'aquest client!");
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        errorMessage= error.message;
+      })
+    if (!this.usersService.autenticat) {
+      alert("Entrada denegada!\n" + errorMessage);
     }
-    if (trobat == false){
-      alert("Usuari o contrasenya incorrectes")
-
-    }
-    else if (trobat == true){
-      if(this.registraServei.passwd_array[posicio]==this.passwd){
-        this.registraServei.autenticat = true;
-        this.registraServei.nomAutenticat = this.registraServei.nom_array[posicio];
-        this.registraServei.correuAutenticat = this.registraServei.correu_array[posicio];
-        this.registraServei.adrecaAutenticat = this.registraServei.adreca_array[posicio];
-        this.registraServei.cognomsAutenticat = this.registraServei.cognoms_array[posicio];
-        this.registraServei.telAutenticat = this.registraServei.tel_array[posicio];
-        this.registraServei.passwordAutenticat = this.registraServei.passwd_array[posicio];
-        this.router.navigate(['/'])
-
-      }
-      else alert("Usuari o contrasenya incorrectes")
-    }
-
-
   }
-  constructor(private registraServei: RegistreLoginService, public router: Router) {
+
+
+  constructor(private usersService: UsersService, public router: Router,
+              public firebaseAuth: AngularFireAuth, private http: HttpClient) {
   }
 
 }

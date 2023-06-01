@@ -48,7 +48,30 @@
       <label for="telefon"><b>Telèfon</b></label>
       <input [(ngModel)]="telefon"  [ngModelOptions]="{standalone: true}" type="tel" id="telefon" placeholder="Telèfon" pattern="[0-9]{9}" required>
     </div>
+    <br>
+
+    <ng-hcaptcha theme="dark"
+                 languageCode="ca"
+                 (verify)="onVerify($event)"
+                 (expired)="onExpired($event)"
+                 (error)="onError($event)">
+    </ng-hcaptcha>
+    <ng-template #content let-c="close" let-d="dismiss">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Informació</h4>
+      </div>
+      <div class="modal-body">
+        <p>Qualsevol informació que ens proporcioni serà confidencial. Si desitges canviar alguna de les teves dades només cal que vagis al teu perfil.
+          Per a més informació pots llegir l'apartat de <a routerLink="/condicions" routerLinkActive="active">condicions</a>
+          o enviar-nos algun missatge a través de l'apartat <a routerLink="/contacte" routerLinkActive="active">contacte</a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-dark" (click)="c('Ok click')">Ok</button>
+      </div>
+    </ng-template>
+
     <button type="submit" >Registra't</button>
     <button type="reset">Neteja</button>
+    <button  type="button" (click)="open(content)">Informacio</button>
   </form>
 </div>
