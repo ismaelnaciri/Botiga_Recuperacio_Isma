@@ -7,10 +7,11 @@ import { CatalegComponent } from './cataleg/cataleg.component'
 import { CondicionsComponent } from "./condicions/condicions.component";
 import { IniciComponent } from "./inici/inici.component";
 import { ContacteComponent} from "./contacte/contacte.component";
-import { GrafiquesComponent} from "./grafiques/grafiques.component";
+import { GraficsComponent} from "./grafics/grafics.component";
 import { SurpriseComponent} from "./surprise/surprise.component";
-import {PerfilComponent} from "./perfil/perfil.component";
-import {CanviarpasswordComponent} from "./canviarpassword/canviarpassword.component";
+import { PerfilComponent} from "./perfil/perfil.component";
+import { CanviarpasswordComponent} from "./canviarpassword/canviarpassword.component";
+import { AdminregistreComponent } from "./adminregistre/adminregistre.component";
 
 const routes: Routes = [
   {path: '', component: IniciComponent},
@@ -21,9 +22,10 @@ const routes: Routes = [
   {path: 'condicions', component: CondicionsComponent},
   {path: 'contacte', component: ContacteComponent},
   {path: 'perfil', component: PerfilComponent},
-  {path: 'grafiques',component: GrafiquesComponent},
+  {path: 'grafics',component: GraficsComponent},
   {path: 'surprise', component: SurpriseComponent},
-  {path: 'canviarpasswd', component: CanviarpasswordComponent}
+  {path: 'canviarpasswd', component: CanviarpasswordComponent},
+  {path: 'adminregistre', component: AdminregistreComponent}
 
 ]
 

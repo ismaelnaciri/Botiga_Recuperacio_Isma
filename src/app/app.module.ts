@@ -19,6 +19,8 @@ import { LoginComponent } from './login/login.component';
 import { PerfilComponent } from './perfil/perfil.component';
 import { CanviarpasswordComponent } from './canviarpassword/canviarpassword.component';
 import {NgHcaptchaModule} from "ng-hcaptcha";
+import { GraficsComponent } from './grafics/grafics.component';
+import { AdminregistreComponent } from './adminregistre/adminregistre.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,8 @@ import {NgHcaptchaModule} from "ng-hcaptcha";
     LoginComponent,
     PerfilComponent,
     CanviarpasswordComponent,
+    GraficsComponent,
+    AdminregistreComponent,
   ],
   imports: [
     BrowserModule,

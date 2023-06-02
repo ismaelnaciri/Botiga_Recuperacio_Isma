@@ -56,7 +56,7 @@ export class RegistreComponent  {
         this.correuTrobat = true;
       }
     }
-    if (this.correuTrobat) {
+    if (this.correuTrobat)  {
       alert("Ja existeix un usuari registrat amb aquest correu!")
     } else {
       this.http.post<any>('http://localhost:3080/datausers', {
@@ -83,6 +83,10 @@ export class RegistreComponent  {
 
   constructor(private registraServei: RegistreLoginService,public router:Router,
               private userService: UsersService, private http: HttpClient) {
+  }
+
+  async goToAdminRegistre() {
+    await this.router.navigate(["/adminregistre"]);
   }
 
   ngOnInit(){}

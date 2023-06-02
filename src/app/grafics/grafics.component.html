@@ -8,17 +8,16 @@
   <a *ngIf="autenticat" routerLink="/perfil" routerLinkActive="active">Perfil</a>
   <div id="loginbar">
     <a *ngIf="!autenticat" class="ab-item" id="login" routerLink="/login" routerLinkActive="active">Inicia la sessió</a>
-    <div *ngIf="autenticat" id="test">
+    <div *ngIf="autenticat">
       <h3>Hola, {{nomAutenticat}}</h3>
-      <button (click)="tancarSessio()">Tancar Sessió</button>
+      <button (click)="tancarSessio()"></button>
     </div>
   </div>
-  <a routerLink="/grafics" routerLinkActive="active">Grafics</a>
 </nav>
 
 <article>
-  <h2>SI ETS UN GAMER ESTAS A LA PAGINA CORRECTE</h2>
-  <img width="auto" height="250" src="http://localhost:3080/imatges/call%20of%20duty.jpg"><br>
-  <img width="auto" height="250" src="http://localhost:3080/imatges/fortnite.jpg">
-  <img width="auto" height="250" src="http://localhost:3080/imatges/godjpg.jpg">
+  <div class="chart-container">
+    <canvas id="grafic-ventes"></canvas>
+    <canvas id="grafic-oferta"></canvas>
+  </div>
 </article>
