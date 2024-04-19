@@ -8,7 +8,7 @@ interface Datos {
   data_compra: string;
   id_producta_comprat: number;
   quantitat: number;
-  oferta: boolean;
+  oferta: number;
 }
 
 @Component({

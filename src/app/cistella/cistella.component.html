@@ -8,11 +8,12 @@
   <a *ngIf="autenticat" routerLink="/perfil" routerLinkActive="active">Perfil</a>
   <div id="loginbar">
     <a *ngIf="!autenticat" class="ab-item" id="login" routerLink="/login" routerLinkActive="active">Inicia la sessió</a>
-    <div *ngIf="autenticat">
+    <div *ngIf="autenticat" id="test2">
       <h3>Hola, {{nomAutenticat}}</h3>
       <button (click)="tancarSessio()">Tancar Sessió</button>
     </div>
   </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
 </nav>
 
 <article>
@@ -42,10 +43,10 @@
 
   <div class="estruturaCarrito">
     <div class="producte" *ngFor="let item of items; let i = index">
-      <img src="{{item.img}}" alt="" class="img-pro"> <br>
-      <h3>{{ item.nom }} </h3>
+      <img src="{{item.producte.img}}" alt="" class="img-pro"> <br>
+      <h3>{{ item.producte.nom }} </h3>
       <h2>
-        {{item.preu * item.quantity}} €
+        {{item.producte.preu * item.quantity}} €
         <input type="number" min="1" class="qty" [value]="item.quantity" (blur)="ValidateInput($event,i)" id="test">
       </h2>
       <button (click)="esborrar(i)">DELETE</button>

@@ -13,7 +13,6 @@ import { IniciComponent } from './inici/inici.component';
 import { ContacteComponent } from './contacte/contacte.component';
 import { HttpClientModule } from "@angular/common/http";
 import {FormsModule} from "@angular/forms";
-import { GrafiquesComponent } from './grafiques/grafiques.component';
 import { SurpriseComponent } from './surprise/surprise.component';
 import { LoginComponent } from './login/login.component';
 import { PerfilComponent } from './perfil/perfil.component';
@@ -34,7 +33,6 @@ import { AdminregistreComponent } from './adminregistre/adminregistre.component'
     CondicionsComponent,
     IniciComponent,
     ContacteComponent,
-    GrafiquesComponent,
     SurpriseComponent,
     LoginComponent,
     PerfilComponent,

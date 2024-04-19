@@ -49,10 +49,15 @@ li{
 
 #loginbar {
   float: right;
+  display: inline-block;
 }
 
 #loginbar a {
   text-decoration: none;
   color: white;
   background-color: red;
+}
+
+#loginbar h3 {
+  color: white;
 }

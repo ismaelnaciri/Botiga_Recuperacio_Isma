@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {RegistreLoginService} from "../registre-login.service";
 import {Router} from "@angular/router";
 import {UsersService} from "../users.service";
@@ -12,45 +12,46 @@ import {HttpClient} from "@angular/common/http";
 })
 export class LoginComponent {
   [x: string]: any;
+
   email: any;
   passwd: any;
-  correuTrobat: any;
+  correuTrobat: any = false;
+
+  constructor(private usersService: UsersService, public router: Router,
+              private http: HttpClient, private registerLoginService: RegistreLoginService) {
+  }
 
   async autenticar() {
+
+    console.log("users from service | ", this.usersService.arrClients);
     var errorMessage = ' ';
 
-    await this.firebaseAuth.signInWithEmailAndPassword(this.email, this.passwd).then(res => {
+    for (let i = 0; i < this.usersService.arrClients.length; i++) {
+
+      if (this.usersService.arrClients[i].email == this.email
+      && this.usersService.arrClients[i].password == this.passwd) {
+        this.usersService.posAutenticat = i;
+        this.correuTrobat = true;
+        this.usersService.admin = true;
         this.usersService.autenticat = true;
-        this.usersService.usuari = JSON.stringify(res.user);
+        this.usersService.usuari = JSON.stringify(this.usersService.arrClients[i].nom);
         this.usersService.emailAutenticat = this.email;
-        this.correuTrobat = false;
 
-        for (let i = 0; i < this.usersService.arrClients.clients.length; i++) {
-          if (this.usersService.arrClients.clients[i].Correu == this.email) {
-            this.usersService.posAutenticat = i;
-            this.correuTrobat = true;
-            this.http.post<any>('http://localhost:3080/log',
-              {log: 'login', text: `Ha iniciat sessió un usuari amb l'adreça de correu ${this.email}`}).subscribe();
-
-            this.router.navigate(['/'])
-          }
-        }
         if (!this.correuTrobat) {
           alert("Sembla que no disposem de les dades d'aquest client!");
         }
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        errorMessage= error.message;
-      })
-    if (!this.usersService.autenticat) {
-      alert("Entrada denegada!\n" + errorMessage);
+        if (!this.usersService.autenticat) {
+          alert("Entrada denegada!\n" + errorMessage);
+        }
+
+        this.http.post<any>('http://localhost:3080/log',
+          {log: 'login', text: `Ha iniciat sessió un usuari amb l'adreça de correu ${this.email}`}).subscribe();
+
+        this.router.navigate(['/'])
+        break;
+      }
     }
   }
 
-
-  constructor(private usersService: UsersService, public router: Router,
-              public firebaseAuth: AngularFireAuth, private http: HttpClient) {
-  }
 
 }

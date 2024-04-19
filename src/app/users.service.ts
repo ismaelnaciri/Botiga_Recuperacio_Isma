@@ -8,6 +8,7 @@ export class UsersService implements OnInit {
   public autenticat: boolean | undefined;
   public posAutenticat = -1;
   public emailAutenticat: any;
+  public admin : boolean | undefined;
   public arrClients: any;
   public usuari: any;
   public walletName: any;
@@ -15,7 +16,7 @@ export class UsersService implements OnInit {
 
   constructor(private http:HttpClient) {
     this.http.get<any>('http://localhost:3080/api/firebase').subscribe((document) =>{
-      this.arrClients = document;
+      this.arrClients = document.client;
     });
   }
 

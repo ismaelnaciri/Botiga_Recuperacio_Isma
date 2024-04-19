@@ -13,12 +13,12 @@
       <button (click)="tancarSessio()">Tancar Sessió</button>
     </div>
   </div>
-  <a routerLink="/grafics" routerLinkActive="active">Grafics</a>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
 </nav>
 
 <article>
   <h2>SI ETS UN GAMER ESTAS A LA PAGINA CORRECTE</h2>
-  <img width="auto" height="250" src="http://localhost:3080/imatges/call%20of%20duty.jpg"><br>
-  <img width="auto" height="250" src="http://localhost:3080/imatges/fortnite.jpg">
-  <img width="auto" height="250" src="http://localhost:3080/imatges/godjpg.jpg">
+  <img width="auto" height="250" src="http://localhost:3080/call%20of%20duty.jpg"><br>
+  <img width="auto" height="250" src="http://localhost:3080/fortnite.jpg">
+  <img width="auto" height="250" src="http://localhost:3080/godjpg.jpg">
 </article>

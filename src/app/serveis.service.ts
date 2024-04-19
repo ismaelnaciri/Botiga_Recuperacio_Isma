@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import {ProductesModel} from "./productesModel";
+import {ProducteSeleccionat} from "./producte-seleccionat";
+import {UsersService} from "./users.service";
 //import {Product} from "./Productes";
 
 @Injectable({
@@ -6,27 +9,33 @@ import { Injectable } from '@angular/core';
 })
 export class ServeisService {
 
-  objectes: any[] = [];
+  objectes: ProductesModel[] = [];
+  seleccionats: ProducteSeleccionat[] = [];
 
-  constructor() {
+  constructor(private usersService: UsersService) {
   }
 
-  addToCart(producte: any){
+  addToCart(producte: ProductesModel){
     this.objectes.push(producte);
+    this.addToItemSeleccionat(producte)
+  }
+
+  addToItemSeleccionat(producte: ProductesModel){
+    this.seleccionats.push(new ProducteSeleccionat(producte, 1, "€", this.usersService.emailAutenticat));
   }
 
   getItems() {
-    return this.objectes;
+    return this.seleccionats;
   }
 
   clearItems () {
-    this.objectes = [];
+    this.seleccionats = [];
 
-    return this.objectes;
+    return this.seleccionats;
   }
 
   eliminarItem(index: any){
-    this.objectes.splice(index, 1)
+    this.seleccionats.splice(index, 1)
   }
 
 

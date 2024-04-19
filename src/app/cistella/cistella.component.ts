@@ -3,26 +3,31 @@ import {ServeisService} from "../serveis.service";
 import {HttpClient} from "@angular/common/http";
 import {UsersService} from "../users.service";
 import {RegistreLoginService} from "../registre-login.service";
+import {ProducteSeleccionat} from "../producte-seleccionat";
 
 @Component({
   selector: 'app-cistella',
   templateUrl: './cistella.component.html',
   styleUrls: ['./cistella.component.css']
 })
-export class CistellaComponent implements OnInit{
-  items = this.s.getItems();
+export class CistellaComponent implements OnInit {
+  items: ProducteSeleccionat[] = this.s.seleccionats
   preuVariable = 0;
   monedaSimbol = "€";
-  canviMoneda = 0;
+  canviMoneda = this.calcularTotal();
   preuActual: any;
 
-  autenticat = this.registraServei.autenticat
-  nomAutenticat = this.registraServei.nomAutenticat
+  autenticat = this.usersService.autenticat
+  nomAutenticat = this.usersService.usuari
+  admin = this.usersService.admin
 
   constructor(private s: ServeisService,
-              private http:HttpClient,
+              private http: HttpClient,
               private serv: UsersService,
-              private registraServei: RegistreLoginService) {
+              private registraServei: RegistreLoginService,
+              private usersService: UsersService) {
+
+    console.log(`items received in cistella | ${this.items}`)
 
   }
 
@@ -50,60 +55,74 @@ export class CistellaComponent implements OnInit{
       this.canviMoneda = this.preuVariable / conversio.binancecoin.eur;
       this.monedaSimbol = "BNB";
       this.preuActual = conversio.binancecoin.eur;
+      this.items.forEach(item => {
+        item.coin = "BNB"
+      });
     }
     //@ts-ignore
     else if (selectedValue === "BTC") {
       this.canviMoneda = this.preuVariable / conversio.bitcoin.eur;
       this.monedaSimbol = "BTC";
       this.preuActual = conversio.bitcoin.eur;
+      this.items.forEach(item => {
+        item.coin = "BTC"
+      });
     }
     //@ts-ignore
     else if (selectedValue === "ETH") {
       this.canviMoneda = this.preuVariable / conversio.ethereum.eur;
       this.monedaSimbol = "ETH";
       this.preuActual = conversio.ethereum.eur;
-    }
-    else if (selectedValue === "EUROS") {
+      this.items.forEach(item => {
+        item.coin = "ETH"
+      });
+    } else if (selectedValue === "EUROS") {
       this.canviMoneda = this.calcularTotal();
       this.monedaSimbol = "€";
       this.preuActual = 1;
-    }
-    else if (selectedValue === "DOLARS") {
+
+      this.items.forEach(item => {
+        item.coin = "€"
+      });
+    } else if (selectedValue === "DOLARS") {
       this.canviMoneda = this.preuVariable / conversio.dollars.eur;
       this.monedaSimbol = "$";
       this.preuActual = conversio.dollars.eur;
-    }
-    else if (selectedValue === "default") {
+      this.items.forEach(item => {
+        item.coin = "$"
+      });
+    } else if (selectedValue === "default") {
       this.canviMoneda = 0;
       this.monedaSimbol = " ";
     }
   }
 
-  async compraBNB(){
+  async compraBNB() {
     const test = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,binancecoin,ethereum,dollars&vs_currencies=eur,usd,btc");
     const conversio = await test.json();
     this.canviMoneda = this.preuVariable / conversio.binancecoin.eur;
     console.log(this.canviMoneda + "BNB")
   }
 
-  premerEnviar (): void{
+  premerEnviar(): void {
     this.items = this.s.clearItems();
   }
 
-  esborrar(index: number){
+  esborrar(index: number) {
     this.s.eliminarItem(index);
   }
-  ValidateInput (event: any, i: number){
-    const quantity = + event.target.value;
-    if (quantity < 1){
+
+  ValidateInput(event: any, i: number) {
+    const quantity = +event.target.value;
+    if (quantity < 1) {
       event.target.value = this.items[i].quantity;
       return;
     }
     this.QuantityUpdated(quantity, i)
-    this.calcularTotal();
+    this.canviMoneda = this.calcularTotal();
   }
 
-  private QuantityUpdated (quantity: number, i: number){
+  private QuantityUpdated(quantity: number, i: number) {
     this.items[i].quantity = quantity;
   }
 
@@ -112,18 +131,21 @@ export class CistellaComponent implements OnInit{
       this.items[i].coin = coin;
   }
 
-  public PriceUpdate(price: number){
-    for (let i = 0; i < this.items.length; i++)
-      this.items[i].price = price;
+  public PriceUpdate(price: number) {
+    for (let i = 0; i < this.items.length; i++) {
+      // @ts-ignore
+      this.items[i].producte.preu = price;
+    }
   }
 
 
-  public calcularTotal(): number{
+  public calcularTotal(): number {
     let total: number = 0;
-    for (let item of this.items){
-      total += (item.quantity * item.preu)
+    for (let item of this.items) {
+      total += (item.quantity * item.producte.preu)
+      this.preuVariable = total;
+
     }
-    this.preuVariable = total;
     return total;
   }
 
@@ -135,17 +157,24 @@ export class CistellaComponent implements OnInit{
     }
   }
 
-  async compraProducte(){
-    this.CoinUpdate(this.monedaSimbol);
-    await this.compraBNB()
-    this.PriceUpdate(this.canviMoneda)
+  async compraProducte() {
+    // this.CoinUpdate(this.monedaSimbol);
+    // await this.compraBNB()
+    // this.PriceUpdate(this.canviMoneda)
 
-    this.http.post('http://localhost:3080/compres', { json: this.items })
+    console.log("received items? ", this.items);
+
+
+    this.http.post('http://localhost:3080/compres', {productes: this.items})
       .subscribe({
         error: error => {
           console.error("There was an error", error);
+        }, complete: () => {
+          this.clearAll()
+          this.calcularTotal()
         }
-      })
+      });
+
     // let params = [
     //   {
     //     // from: this.serv.walletName,
@@ -158,7 +187,6 @@ export class CistellaComponent implements OnInit{
     // //@ts-ignore
     // await window.ethereum.request({method: "eth_sendTransaction"}, params);
 
-    this.clearAll()
   }
 
 }

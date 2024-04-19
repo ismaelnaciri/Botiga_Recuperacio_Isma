@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {ServeisService} from "../serveis.service";
 import {HttpClient} from "@angular/common/http";
 import {RegistreLoginService} from "../registre-login.service";
+import {UsersService} from "../users.service";
+import {ProductesModel} from "../productesModel";
 
 //import { Product, products } from "../Productes";
 
@@ -11,19 +13,21 @@ import {RegistreLoginService} from "../registre-login.service";
   styleUrls: ['./cataleg.component.css']
 })
 export class CatalegComponent implements OnInit {
-  products: any;
-  autenticat = this.registreServei.autenticat
-  nomAutenticat = this.registreServei.nomAutenticat
+  products: ProductesModel[] = [];
+  temp: any;
+  autenticat = this.usersService.autenticat;
+  nomAutenticat = this.usersService.usuari;
+  admin = this.usersService.admin;
 
-  constructor(private s: ServeisService, private http: HttpClient, private registreServei: RegistreLoginService) {
+  constructor(private s: ServeisService, private http: HttpClient, private registreServei: RegistreLoginService, private usersService: UsersService) {
     this.listProductes();
   }
 
   tancarSessio(){
-    this.registreServei.autenticat = false;
-    this.registreServei.nomAutenticat = 'null';
+    this.usersService.autenticat = false;
+    this.usersService.usuari = '';
     this.autenticat= false;
-    this.nomAutenticat= 'null';
+    this.nomAutenticat= '';
   }
 
   ngOnInit() {
@@ -32,20 +36,37 @@ export class CatalegComponent implements OnInit {
   listProductes() {
     this.http.get('http://localhost:3080/productes')
       .subscribe(data => {
-        this.products = data;
+        this.temp = data;
+
+        for (let i = 0; i < this.temp.length; i++) {
+          this.products.push(new ProductesModel(
+            this.temp[i].idproducte,
+            this.temp[i].nom,
+            this.temp[i].preu,
+            this.temp[i].img,
+            this.temp[i].tipus,
+            this.temp[i].oferta,
+            this.temp[i].createdAt,
+            this.temp[i].updatedAt,
+          ));
+        }
+        console.log("products: | ", this.products);
       });
   }
 
-  addToCart(product: any){
-    product.quantity = 1;
-    this.s.addToCart(product);
-    window.alert((`${product.nom} s'ha afegit a la cistella.`));
+  addToCart(product: ProductesModel){
+    if (this.autenticat) {
+      this.s.addToCart(product);
+      window.alert((`${product.nom} s'ha afegit a la cistella.`));
+    } else {
+      window.alert((`Has d'iniciar sessió per poder poder afegir elements a la cistella`));
+    }
   }
 
-  filterShown (product: any) {
-    let filtratgeJoc = product.type = "Joc";
-    let filtratgeConsola = product.type = "Consola";
-    let filtratgeMando = product.type = "Mando";
+  filterShown (product: ProductesModel) {
+    let filtratgeJoc = product.tipus = "Joc";
+    let filtratgeConsola = product.tipus = "Consola";
+    let filtratgeMando = product.tipus = "Mando";
   }
 
 

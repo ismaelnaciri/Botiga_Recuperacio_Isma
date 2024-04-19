@@ -8,11 +8,12 @@
   <a *ngIf="autenticat" routerLink="/perfil" routerLinkActive="active">Perfil</a>
   <div id="loginbar">
     <a *ngIf="!autenticat" class="ab-item" id="login" routerLink="/login" routerLinkActive="active">Inicia la sessió</a>
-    <select *ngIf="autenticat" name="logout" id="logout">
-      <option selected hidden>Hola, {{nomAutenticat}}</option>
-      <option (click)="tancarSessio()">Tancar sessió</option>
-    </select>
+    <div *ngIf="autenticat" id="test">
+      <h3>Hola, {{nomAutenticat}}</h3>
+      <button (click)="tancarSessio()">Tancar Sessió</button>
+    </div>
   </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
 </nav>
 
 <div *ngFor="let product of products" class="producte">
