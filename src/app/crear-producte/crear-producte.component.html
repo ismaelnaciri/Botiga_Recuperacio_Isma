@@ -1,0 +1,49 @@
+<nav id="menu">
+  <a routerLink="/" routerLinkActive="active">Home</a>
+  <a routerLink="/cataleg" routerLinkActive="active">Catàleg</a>
+  <a routerLink="/registre" routerLinkActive="active">Registre Client</a>
+  <a routerLink="/cistella" routerLinkActive="active">Cistella</a>
+  <a routerLink="/condicions" routerLinkActive="active">Condicions</a>
+  <a routerLink="/contacte" routerLinkActive="active">Contacte</a>
+  <a *ngIf="autenticat" routerLink="/perfil" routerLinkActive="active">Perfil</a>
+  <div id="loginbar">
+    <a *ngIf="!autenticat" class="ab-item" id="login" routerLink="/login" routerLinkActive="active">Inicia la sessió</a>
+    <div *ngIf="autenticat">
+      <h3>Hola, {{nomAutenticat}}</h3>
+      <button (click)="tancarSessio()">Tancar Sessió</button>
+    </div>
+  </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
+  <a *ngIf="autenticat && admin" routerLink="/crearProducte" routerLinkActive="active">Crear Producte</a>
+</nav>
+
+<h1 style="text-align: center">Create Product</h1>
+
+<div id="formulari">
+  <form (submit)="crearProducte()" ngNativeValidate>
+    <div class="inputDiv">
+      <label for="producteNom"><b>Nom</b></label>
+      <input [(ngModel)]="producteNom" [ngModelOptions]="{standalone: true}" type="text" id="producteNom" placeholder="producteNom" required>
+    </div>
+
+    <div class="inputDiv">
+      <label for="productePreu"><b>Preu</b></label>
+      <input [(ngModel)]="productePreu" [ngModelOptions]="{standalone: true}" type="text" id="productePreu" placeholder="0.0" pattern="[0-9]+(\.[0-9]+)?" title="Only numbers and decimals allowed" required>
+    </div>
+
+    <div class="inputDiv">
+      <label for="producteTipus"><b>Tipus</b></label>
+      <input [(ngModel)]="producteTipus"  [ngModelOptions]="{standalone: true}" type="text" id="producteTipus" placeholder="producteTipus" required>
+    </div>
+
+    <div class="inputDiv">
+      <label for="producteOferta"><b>Oferta</b></label>
+      <input  [(ngModel)]="producteOferta" [ngModelOptions]="{standalone: true}" type="checkbox" id="producteOferta" value="1" required>
+    </div>
+
+    <br>
+
+    <button type="submit">Crear Producte</button>
+    <button type="reset">Neteja</button>
+  </form>
+</div>

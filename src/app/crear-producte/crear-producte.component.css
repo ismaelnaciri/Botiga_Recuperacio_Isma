@@ -1,0 +1,84 @@
+#menu {
+  text-align: left;
+  padding-bottom: 50px;
+  background: black;
+}
+
+#menu a {
+  float: left;
+  color: white;
+  text-align: center;
+  padding: 15px 16px;
+  font-size: 20px;
+  text-decoration: none;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+#menu a:hover {
+  background-color: white;
+  color: black;
+  border-bottom: 5px solid red;
+  padding: 12px 15px;
+}
+
+#loginbar {
+  float: right;
+  display: inline-block;
+}
+
+#loginbar a {
+  text-decoration: none;
+  color: white;
+  background-color: red;
+}
+
+#loginbar h3 {
+  color: white;
+}
+
+/*#formulari {*/
+/*  width: auto;*/
+/*  display: inline-block;*/
+/*  text-align: center;*/
+/*  margin-top: 6%;*/
+/*  margin-left: 9%;*/
+/*  margin-right: 25%;*/
+/*  border-left: black solid 1px;*/
+/*  padding-left: 150px;*/
+/*  height: 500px;*/
+/*}*/
+
+input{
+  color: black;
+  display: block;
+  height: 20px;
+  padding: 5px 5px;
+  border: 1px solid black;
+  margin: 5px;
+}
+
+button{
+  display: block;
+  margin: 5px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#formulari {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: auto; /* Adjust as needed */
+}
+
+form {
+  display: block;
+  color: black;
+  border-radius: 8px;
+  padding: 20px 40px;
+  box-shadow: 0 0 25px;
+  text-align: left;
+  margin-bottom: 20px;
+}
