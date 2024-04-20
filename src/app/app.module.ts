@@ -20,6 +20,7 @@ import { CanviarpasswordComponent } from './canviarpassword/canviarpassword.comp
 import {NgHcaptchaModule} from "ng-hcaptcha";
 import { GraficsComponent } from './grafics/grafics.component';
 import { AdminregistreComponent } from './adminregistre/adminregistre.component';
+import { CrearProducteComponent } from './crear-producte/crear-producte.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { AdminregistreComponent } from './adminregistre/adminregistre.component'
     CanviarpasswordComponent,
     GraficsComponent,
     AdminregistreComponent,
+    CrearProducteComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,7 +48,7 @@ import { AdminregistreComponent } from './adminregistre/adminregistre.component'
     HttpClientModule,
     RecaptchaModule,
     FormsModule,
-    NgHcaptchaModule
+    NgHcaptchaModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]

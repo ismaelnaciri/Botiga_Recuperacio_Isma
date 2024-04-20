@@ -6,17 +6,17 @@
   margin-top: 20px;
   margin-bottom: 20px;
 }
-#sign-in-form {
-  width: auto;
-  display: inline-block;
-  text-align: center;
-  margin-top: 6%;
-  margin-left: 9%;
-  margin-right: 25%;
-  border-left: black solid 1px;
-  padding-left: 150px;
-  height: 500px;
-}
+/*#sign-in-form {*/
+/*  width: auto;*/
+/*  display: inline-block;*/
+/*  text-align: center;*/
+/*  margin-top: 6%;*/
+/*  margin-left: 9%;*/
+/*  margin-right: 25%;*/
+/*  border-left: black solid 1px;*/
+/*  padding-left: 150px;*/
+/*  height: 500px;*/
+/*}*/
 .nom{
   margin-top: 20px;
   margin-bottom: 20px;

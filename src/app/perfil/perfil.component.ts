@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {RegistreLoginService} from "../registre-login.service";
 import {Router} from "@angular/router";
+import {UsersService} from "../users.service";
 
 @Component({
   selector: 'app-perfil',
@@ -9,21 +10,25 @@ import {Router} from "@angular/router";
 })
 export class PerfilComponent {
 
-  constructor(private registraServei: RegistreLoginService, private router: Router) {
+  constructor(private registraServei: RegistreLoginService, private router: Router,
+              private usersService: UsersService) {
+
+    if (!this.usersService.autenticat) {
+      this.router.navigate(['/login']);
+    }
   }
 
-  autenticat = this.registraServei.autenticat
-  nomAutenticat = this.registraServei.nomAutenticat
-  cognomAutenticat = this.registraServei.cognomsAutenticat
-  adrecaAutenticat = this.registraServei.adrecaAutenticat
-  emailAutenticat = this.registraServei.correuAutenticat
-  passwordAutenticat = this.registraServei.passwordAutenticat
-  telefonAutenticat = this.registraServei.telAutenticat
+  autenticat = this.usersService.autenticat
+  admin = this.usersService.admin;
+  nomAutenticat = this.usersService.usuari
+  emailAutenticat = this.usersService.emailAutenticat
 
-  tancarSessio(){
-    this.registraServei.autenticat = false;
-    this.registraServei.nomAutenticat = 'null';
-    this.autenticat= false;
-    this.nomAutenticat= 'null';
+  tancarSessio() {
+    this.usersService.autenticat = false;
+    this.usersService.usuari = '';
+    this.usersService.emailAutenticat = "";
+    this.autenticat = false;
+    this.nomAutenticat = '';
+    this.router.navigate(['/']);
   }
 }

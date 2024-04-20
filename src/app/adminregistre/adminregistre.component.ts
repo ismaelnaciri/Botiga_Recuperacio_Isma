@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import {UsersService} from "../users.service";
 import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
 
 @Component({
   selector: 'app-adminregistre',
@@ -22,12 +21,12 @@ export class AdminregistreComponent {
   correuTrobat: any;
   root: any;
 
-  async tancarSessio(){
+  tancarSessio(){
     this.usuariServei.autenticat = false;
     this.autenticat= false;
     this.nomAutenticat= 'null';
     this.root = false;
-    await this.router.navigate(['/']);
+    this.router.navigate(['/']);
   }
 
   async registrar() {
@@ -62,10 +61,10 @@ export class AdminregistreComponent {
   }
 
   constructor(private usuariServei: UsersService,public router:Router,
-              private http:HttpClient, public firebaseAuth: AngularFireAuth) {
+              private http:HttpClient) {
     if(this.autenticat){
-      this.nomAutenticat = this.usuariServei.arrClients.clients[this.usuariServei.posAutenticat].Nom;
-      if(this.usuariServei.arrClients.clients[this.usuariServei.posAutenticat].Rol == 'root'){
+      this.nomAutenticat = this.usuariServei.arrClients[this.usuariServei.posAutenticat].Nom;
+      if(this.usuariServei.arrClients[this.usuariServei.posAutenticat].admin == 'root'){
         this.root = true;
       }
       else{

@@ -32,7 +32,7 @@ export class LoginComponent {
       && this.usersService.arrClients[i].password == this.passwd) {
         this.usersService.posAutenticat = i;
         this.correuTrobat = true;
-        this.usersService.admin = true;
+        this.usersService.arrClients[i].admin == true ? this.usersService.admin = true : this.usersService.admin = false;
         this.usersService.autenticat = true;
         this.usersService.usuari = JSON.stringify(this.usersService.arrClients[i].nom);
         this.usersService.emailAutenticat = this.email;

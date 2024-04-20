@@ -8,16 +8,43 @@
   <a *ngIf="autenticat" routerLink="/perfil" routerLinkActive="active">Perfil</a>
   <div id="loginbar">
     <a *ngIf="!autenticat" class="ab-item" id="login" routerLink="/login" routerLinkActive="active">Inicia la sessió</a>
-    <div *ngIf="autenticat">
-      <h3>Hola, {{nomAutenticat}}</h3>
-      <button (click)="tancarSessio()"></button>
+    <div *ngIf="autenticat" id="test2">
+      <h3>Hola, {{ nomAutenticat }}</h3>
+      <button (click)="tancarSessio()">Tancar Sessió</button>
     </div>
   </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
+  <a *ngIf="autenticat && admin" routerLink="/crearProducte" routerLinkActive="active">Crear Producte</a>
 </nav>
 
 <article>
+  <h1>Historial de compres</h1>
+  <table class="styled-table">
+    <thead>
+    <tr>
+      <th>id_producte</th>
+      <th>quantity</th>
+      <th>oferta</th>
+      <th>usuari</th>
+      <th>data_comprat</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let data of dailyRevenueData">
+      <td>{{ data.idproducte }}</td>
+      <td>{{ data.quantitat }}</td>
+      <td>{{ data.oferta }}</td>
+      <td>{{ data.usuari }}</td>
+      <td>{{ data.createdAt }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+
   <div class="chart-container">
-    <canvas id="grafic-ventes"></canvas>
-    <canvas id="grafic-oferta"></canvas>
+    <h1>Total Revenue</h1>
+    <canvas id="grafic-ventes" style="margin-bottom: 100px;"></canvas>
+    <h1 style="margin-top: 100px">Oferta to Non-Oferta Graph</h1>
+    <canvas id="grafic-oferta" width="400" height="200"></canvas>
   </div>
 </article>

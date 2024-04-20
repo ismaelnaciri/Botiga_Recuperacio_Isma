@@ -13,6 +13,8 @@
       <button (click)="tancarSessio()">Tancar Sessió</button>
     </div>
   </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
+  <a *ngIf="autenticat && admin" routerLink="/crearProducte" routerLinkActive="active">Crear Producte</a>
 </nav>
 
 <article>

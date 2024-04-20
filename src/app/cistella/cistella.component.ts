@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {UsersService} from "../users.service";
 import {RegistreLoginService} from "../registre-login.service";
 import {ProducteSeleccionat} from "../producte-seleccionat";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-cistella',
@@ -23,20 +24,21 @@ export class CistellaComponent implements OnInit {
 
   constructor(private s: ServeisService,
               private http: HttpClient,
-              private serv: UsersService,
               private registraServei: RegistreLoginService,
-              private usersService: UsersService) {
+              private usersService: UsersService,
+              private router: Router) {
 
     console.log(`items received in cistella | ${this.items}`)
 
   }
 
   tancarSessio() {
-    this.registraServei.autenticat = false;
-    this.registraServei.nomAutenticat = 'null';
+    this.usersService.autenticat = false;
+    this.usersService.usuari = '';
+    this.usersService.emailAutenticat = "";
     this.autenticat = false;
-    this.nomAutenticat = 'null';
-    console.log("funciona clic")
+    this.nomAutenticat = '';
+    this.router.navigate(['/']);
   }
 
   ngOnInit() {
@@ -169,11 +171,11 @@ export class CistellaComponent implements OnInit {
       .subscribe({
         error: error => {
           console.error("There was an error", error);
-        }, complete: () => {
-          this.clearAll()
-          this.calcularTotal()
         }
       });
+
+    this.clearAll()
+    this.calcularTotal()
 
     // let params = [
     //   {

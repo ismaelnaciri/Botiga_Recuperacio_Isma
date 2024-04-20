@@ -14,6 +14,8 @@
       <button (click)="tancarSessio()">Tancar Sessió</button>
     </div>
   </div>
+  <a *ngIf="autenticat && admin" routerLink="/grafics" routerLinkActive="active">Grafics</a>
+  <a *ngIf="autenticat && admin" routerLink="/crearProducte" routerLinkActive="active">Crear Producte</a>
 </nav>
 
 
@@ -23,14 +25,6 @@
 
     <label class="data"><b>Nom</b></label>
     <p>{{nomAutenticat}}</p>
-    <label class="data"><b>Cognoms</b></label>
-    <p>{{cognomAutenticat}}</p>
-    <label class="data"><b>Adreça</b></label>
-    <p>{{adrecaAutenticat}}</p>
-    <label class="data"><b>Correu</b></label>
+    <label class="data"><b>Email</b></label>
     <p>{{emailAutenticat}}</p>
-    <label class="data"><b>Contrasenya</b></label>
-    <p>{{passwordAutenticat}}</p>
-    <label class="data"><b>Telefon</b></label>
-    <p>{{telefonAutenticat}}</p>
   </div>

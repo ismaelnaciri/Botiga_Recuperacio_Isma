@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {RegistreLoginService} from "../registre-login.service";
 import {UsersService} from "../users.service";
 import {ProductesModel} from "../productesModel";
+import {Router} from "@angular/router";
 
 //import { Product, products } from "../Productes";
 
@@ -19,15 +20,19 @@ export class CatalegComponent implements OnInit {
   nomAutenticat = this.usersService.usuari;
   admin = this.usersService.admin;
 
-  constructor(private s: ServeisService, private http: HttpClient, private registreServei: RegistreLoginService, private usersService: UsersService) {
+  constructor(private s: ServeisService, private http: HttpClient,
+              private registreServei: RegistreLoginService, private usersService: UsersService,
+              private router: Router) {
     this.listProductes();
   }
 
   tancarSessio(){
     this.usersService.autenticat = false;
     this.usersService.usuari = '';
+    this.usersService.emailAutenticat = "";
     this.autenticat= false;
     this.nomAutenticat= '';
+    this.router.navigate(['/']);
   }
 
   ngOnInit() {

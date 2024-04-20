@@ -1,146 +1,178 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {UsersService} from "../users.service";
 import {Router} from "@angular/router";
-import {Chart} from "chart.js";
+import {Chart, LinearScale, registerables} from "chart.js";
+import _default from "chart.js/dist/plugins/plugin.legend";
+import labels = _default.defaults.labels;
 
-interface Datos {
-  data_compra: string;
-  id_producta_comprat: number;
-  quantitat: number;
-  oferta: number;
-}
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-grafics',
   templateUrl: './grafics.component.html',
   styleUrls: ['./grafics.component.css']
 })
-export class GraficsComponent {
-  dades: any[] = [];
+export class GraficsComponent implements OnInit {
+  dailyRevenueData: any[] = [];
+  ofertaNoOfertaData: any[] = [];
   autenticat= this.usuariServei.autenticat;
+  admin= this.usuariServei.admin;
+  nomAutenticat = this.usuariServei.usuari;
 
   constructor(private http: HttpClient,private usuariServei: UsersService,
               public router:Router) {
-    if(this.autenticat){
-      this.nomAutenticat = this.usuariServei.arrClients.clients[this.usuariServei.posAutenticat].Nom;
-      if(this.usuariServei.arrClients.clients[this.usuariServei.posAutenticat].Rol == 'root'){
-        this.root = true;
-      }
-      else{
-        this.root=false
-        this.router.navigate(['/']);
-      };
-    }else{
-      this.router.navigate(['/']);
-    }
-    this.http.get<Datos[]>('http://localhost:3080/dadescompres').subscribe((data: Datos[]) => {
-      this.dades = data;
-      this.renderChart();
-    });
+
   }
 
-  renderChart() {
+  renderDailyRevenueChart() {
+    this.dailyRevenueData.sort((a, b) => {
+      const dateA = new Date(a.data);
+      const dateB = new Date(b.data);
+      return dateA.getTime() - dateB.getTime();
+    });
 
-    const groupedData = this.dades.reduce((result, d) => {
-      const key = `${d.data_compra}-${d.id_producta_comprat}`;
-      if (!result[key]) {
-        result[key] = {
-          label: d.id_producta_comprat,
-          data: 0,
-          backgroundColor: this.getRandomColor(),
-        };
+    const revenuePerDay = this.dailyRevenueData.reduce((result, d) => {
+      const date = new Date(d.data).toLocaleDateString("es-ES");
+      const revenue = parseFloat(d.cost) * d.quantitat;// Extract date part only
+      if (!result[date]) {
+        result[date] = 0;
       }
-      result[key].data += d.quantitat;
+      result[date] += revenue;
       return result;
     }, {});
 
-// Crear conjunt de dades per crear cada grup de dades
-    const datasets = Object.keys(groupedData).map(key => ({
-      label: groupedData[key].label,
-      data: [groupedData[key].data],
-      backgroundColor: groupedData[key].backgroundColor,
-    }));
+    const dates = Object.keys(revenuePerDay);
+    const revenues = Object.values(revenuePerDay);
 
-// Configurar el grafic de barras
-    new Chart('grafic-ventes', {
+    // Render chart
+    const ctx = document.getElementById('grafic-ventes') as HTMLCanvasElement;
+    new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: this.getUniqueDates(),
-        datasets: datasets,
+        labels: dates,
+        datasets: [{
+          label: 'Daily Revenue',
+          data: revenues,
+          backgroundColor: 'rgba(54, 162, 235, 0.6)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        }]
       },
       options: {
-        responsive: true,
         scales: {
           y: {
-            ticks: {
-              stepSize: 10,
-            },
-            stacked: false,
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Euros'
+            }
           },
           x: {
-            stacked: false,
-          },
-        },
-      },
+            title: {
+              display: true,
+              text: 'Day'
+            }
+          }
+        }
+      }
+    });
+  }
+
+
+  renderOfertaChart() {
+    //Oferta line graph
+    this.ofertaNoOfertaData.sort((a, b) => {
+      const dateA = new Date(a.data);
+      const dateB = new Date(b.data);
+      return dateA.getTime() - dateB.getTime();
     });
 
-    const datasetsO = this.dades.reduce((groups, data) => {
-      if (!groups[data.oferta]) {
-        groups[data.oferta] = {
-          label: data.oferta ? 'Productos en oferta' : 'Productos sin oferta',
-          data: [],
-          borderColor: this.getRandomColor(),
-          fill: false,
-        };
+    const revenuePerDayOferta1 = this.dailyRevenueData.reduce((result, d) => {
+      if (d.oferta === 1) {
+        const date = new Date(d.data).toLocaleDateString("es-ES"); // Extract date part only
+        const revenue = parseFloat(d.cost) * d.quantitat; // Calculate revenue for this transaction
+        if (!result[date]) {
+          result[date] = 0;
+        }
+        result[date] += revenue; // Add revenue to total for this day
       }
+      return result;
+    }, {});
 
-      const index = this.getUniqueDates().indexOf(data.data_compra);
-      groups[data.oferta].data[index] = data.quantitat;
-      return groups;
+    const revenuePerDayOferta0 = this.dailyRevenueData.reduce((result, d) => {
+      if (d.oferta === 0) {
+        const date = new Date(d.data).toLocaleDateString("es-ES"); // Extract date part only
+        const revenue = parseFloat(d.cost) * d.quantitat; // Calculate revenue for this transaction
+        if (!result[date]) {
+          result[date] = 0;
+        }
+        result[date] += revenue; // Add revenue to total for this day
+      }
+      return result;
+    }, {});
 
-    }, );
+    const dates = Object.keys(revenuePerDayOferta1); // Assuming dates are same for both datasets
+    const revenuesOferta1 = dates.map(date => revenuePerDayOferta1[date] || 0);
+    const revenuesOferta0 = dates.map(date => revenuePerDayOferta0[date] || 0);
 
-    new Chart('grafic-oferta', {
+    console.log("revenuesOferta | ", revenuePerDayOferta1);
+    console.log("revenuesWithout | ", revenuesOferta0);
+    const ctx = document.getElementById('grafic-oferta') as HTMLCanvasElement;
+    new Chart(ctx, {
       type: 'line',
       data: {
-        labels: this.getUniqueDates(),
-        datasets: datasets,
+        labels: dates,
+        datasets: [{
+          label: 'Revenue with Oferta',
+          data: revenuesOferta1,
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        },
+          {
+            label: 'Revenue without Oferta',
+            data: revenuesOferta0,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
       },
       options: {
-        responsive: true,
         scales: {
-          x: {
+          y: {
             beginAtZero: true,
-            ticks: {
-              stepSize: 10,
-            },
+            title: {
+              display: true,
+              text: 'Euros'
+            }
           },
-        },
-      },
+          x: {
+            title: {
+              display: true,
+              text: 'Day'
+            }
+          }
+        }
+      }
     });
-  }
-
-//
-  private getUniqueDates(): string[] {
-    return [...new Set(this.dades.map(d => d.data_compra))];
-  }
-
-//
-  nomAutenticat: any;
-  root: any;
-  private getRandomColor(): string {
-    const r = Math.floor(Math.random() * 256);
-    const g = Math.floor(Math.random() * 256);
-    const b = Math.floor(Math.random() * 256);
-    return `rgb(${r},${g},${b})`;
   }
 
   tancarSessio() {
     this.usuariServei.autenticat = false;
-    this.autenticat= false;
-    this.nomAutenticat= 'null';
-    this.root = false;
+    this.usuariServei.usuari = '';
+    this.usuariServei.emailAutenticat = "";
+    this.autenticat = false;
+    this.nomAutenticat = '';
     this.router.navigate(['/']);
+  }
+
+  ngOnInit() {
+    this.http.get<any[]>('http://localhost:3080/historialCompres').subscribe((data: any[]) => {
+      this.dailyRevenueData = data;
+      this.ofertaNoOfertaData = data;
+      this.renderDailyRevenueChart();
+      this.renderOfertaChart();
+    });
   }
 }

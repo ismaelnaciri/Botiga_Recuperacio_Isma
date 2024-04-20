@@ -12,6 +12,7 @@ import { SurpriseComponent} from "./surprise/surprise.component";
 import { PerfilComponent} from "./perfil/perfil.component";
 import { CanviarpasswordComponent} from "./canviarpassword/canviarpassword.component";
 import { AdminregistreComponent } from "./adminregistre/adminregistre.component";
+import {CrearProducteComponent} from "./crear-producte/crear-producte.component";
 
 const routes: Routes = [
   {path: '', component: IniciComponent},
@@ -25,7 +26,8 @@ const routes: Routes = [
   {path: 'grafics',component: GraficsComponent},
   {path: 'surprise', component: SurpriseComponent},
   {path: 'canviarpasswd', component: CanviarpasswordComponent},
-  {path: 'adminregistre', component: AdminregistreComponent}
+  {path: 'adminregistre', component: AdminregistreComponent},
+  {path: 'crearProducte', component: CrearProducteComponent},
 
 ]
 
